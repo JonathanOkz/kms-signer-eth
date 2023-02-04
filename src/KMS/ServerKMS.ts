@@ -17,6 +17,10 @@ export abstract class ServerKMS implements KMS {
         return UAddress.fromPublickey(await this.getPublickey(KeyId)).getAddress();
     }
 
+    async getAddressHex(KeyId: string) : Promise<string>  { console.log("ServerKMS getAddressHex...");
+        return UAddress.fromPublickey(await this.getPublickey(KeyId)).getAddressHex();
+    }
+
     async ecsign(address: Buffer, KeyId: string, msgHash: Buffer, chainId?: number) : Promise<ECDSASignature> { console.log("ServerKMS sign...", KeyId, chainId);
 
         const {r, s} = USignatureECDSA.decodeRS(await this.kmsSignDigest(KeyId, msgHash));

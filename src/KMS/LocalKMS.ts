@@ -18,8 +18,12 @@ export class LocalKMS implements KMS {
         return UPublickey.fromPrivatekey(this.privatekey).getPublickey();
     }
 
-    async getAddress(KeyId: string) : Promise<Buffer>  { console.log("ServerKMS getAddress...");
+    async getAddress(KeyId: string) : Promise<Buffer>  { console.log("LocalKMS getAddress...");
         return UAddress.fromPublickey(await this.getPublickey(KeyId)).getAddress();
+    }
+
+    async getAddressHex(KeyId: string) : Promise<string>  { console.log("LocalKMS getAddressHex...");
+        return UAddress.fromPublickey(await this.getPublickey(KeyId)).getAddressHex();
     }
 
     async ecsign(address: Buffer, KeyId: string, msgHash: Buffer, chainId?: number) : Promise<ECDSASignature> { console.log("LocalKMS sign...");
