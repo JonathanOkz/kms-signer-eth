@@ -1,8 +1,9 @@
-import { addHexPrefix } from '@ethereumjs/util'
+import { addHexPrefix, fromSigned, toUnsigned, bigIntToBuffer } from '@ethereumjs/util'
 import { Transaction, TxData } from '@ethereumjs/tx';
 import { Common } from '@ethereumjs/common'
 import { KMS } from './Types/KMS';
 import { Account } from './Account';
+import { UBuffer } from './Utils/UBuffer';
 
 export class Signer {
     kms: KMS;
@@ -22,5 +23,19 @@ export class Signer {
         const signed     = Transaction.fromTxData({...txData, r, s, v}, { common: this.common });
     
         return addHexPrefix(signed.serialize().toString('hex'));
+    }
+
+    /**
+     * @returns The concatenated ECDSA signature as a '0x'-prefixed string.
+     */
+    public async signMessage(account: Account | { address: Buffer, KeyId: string }, message: string) {
+        const digest    = UBuffer.bufferOrHex(message)
+        const {r, s, v} = await this.kms.ecsign(account.address, account.KeyId, digest);
+
+        const rStr = toUnsigned(fromSigned(r)).toString('hex');
+        const sStr = toUnsigned(fromSigned(s)).toString('hex');
+        const vStr = bigIntToBuffer(v).toString('hex');
+
+        return addHexPrefix(rStr.concat(sStr, vStr));
     }
 }
