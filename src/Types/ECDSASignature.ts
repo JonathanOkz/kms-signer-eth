@@ -1,5 +1,5 @@
 export interface ECDSASignature {
-    v: number;
+    v: bigint;
     r: Buffer;
     s: Buffer;
 }

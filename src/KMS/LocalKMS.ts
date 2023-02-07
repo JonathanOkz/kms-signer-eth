@@ -1,7 +1,7 @@
 import { KMS } from "../Types/KMS";
 import { UPublickey } from "../Utils/UPublickey";
 import { UBuffer } from "../Utils/UBuffer";
-import * as ethutil from "ethereumjs-util";
+import * as ethutil from "@ethereumjs/util";
 import { ECDSASignature } from "../Types/ECDSASignature";
 import { UAddress } from "../Utils/UAddress";
 
@@ -26,7 +26,7 @@ export class LocalKMS implements KMS {
         return UAddress.fromPublickey(await this.getPublickey(KeyId)).getAddressHex();
     }
 
-    async ecsign(address: Buffer, KeyId: string, msgHash: Buffer, chainId?: number) : Promise<ECDSASignature> { console.log("LocalKMS sign...");
-        return ethutil.ecsign(msgHash, this.privatekey, chainId);
+    async ecsign(address: Buffer, KeyId: string, digest: Buffer, chainId?: bigint) : Promise<ECDSASignature> { console.log("LocalKMS sign...");
+        return ethutil.ecsign(digest, this.privatekey, chainId);
     }
 }

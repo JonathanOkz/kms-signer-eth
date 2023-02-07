@@ -33,10 +33,10 @@ export class AWSKMS extends ServerKMS {
      * 
      * @returns a DER-encoded object as defined by ANS X9.62–2005.
      */
-    async kmsSignDigest(KeyId: string, msgHash: Buffer) : Promise<Buffer> { console.log("AWSKMS kmsSignDigest...");
+    async kmsSignDigest(KeyId: string, digest: Buffer) : Promise<Buffer> { console.log("AWSKMS kmsSignDigest...");
         const response = await this.kms.send(new SignCommand({
             KeyId: KeyId,
-            Message: msgHash,
+            Message: digest,
             MessageType: "DIGEST",
             SigningAlgorithm: "ECDSA_SHA_256",
         }));

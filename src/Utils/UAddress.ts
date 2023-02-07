@@ -1,4 +1,4 @@
-import * as ethutil from "ethereumjs-util";
+import * as ethutil from "@ethereumjs/util";
 import { UBuffer } from "./UBuffer";
 
 export class UAddress {

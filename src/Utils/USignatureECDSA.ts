@@ -1,5 +1,5 @@
 import * as asn1js from "asn1js";
-import { BN } from "ethereumjs-util";
+import { BN } from "bn.js";
 import { UPublickey } from "./UPublickey";
 
 export class USignatureECDSA {
@@ -58,21 +58,21 @@ export class USignatureECDSA {
      * All we have to do is call this function twice, once with v = `candidate_1`, and in case that does not give us
      * the right address, a second time with v = `candidate_2`. One of the two calls should result in the Eth address.
      */
-    public static calculateV(address: Buffer, msgHash: Buffer, r: Buffer, s: Buffer, chainId?: number) : number {
+    public static calculateV(address: Buffer, digest: Buffer, r: Buffer, s: Buffer, chainId?: bigint) : bigint {
         /**
          * This is the function to find the right v value
          * There are two matching signatues on the elliptic curve
          * we need to find the one that matches to our public key
          * it can be v = `candidate_1` or v = `candidate_2`
          */
-        const candidate_1 = (chainId) ? (chainId * 2 + 35) : 27;
-        const candidate_2 = (chainId) ? (chainId * 2 + 36) : 28;
-        if (Buffer.compare(address, UPublickey.fromVRS(msgHash, candidate_1, r, s, chainId).getAddress()) === 0) {
+        const candidate_1 = (chainId) ? (chainId * BigInt(2) + BigInt(35)) : BigInt(27);
+        const candidate_2 = (chainId) ? (chainId * BigInt(2) + BigInt(36)) : BigInt(28);
+        if (Buffer.compare(address, UPublickey.fromVRS(digest, candidate_1, r, s, chainId).getAddress()) === 0) {
             return candidate_1;
-        } else if (Buffer.compare(address, UPublickey.fromVRS(msgHash, candidate_2, r, s, chainId).getAddress()) === 0) {
+        } else if (Buffer.compare(address, UPublickey.fromVRS(digest, candidate_2, r, s, chainId).getAddress()) === 0) {
             return candidate_2;
         } else {
-            return -1;
+            return BigInt(-1);
         }
     }
 }

@@ -1,5 +1,5 @@
 import * as asn1js from "asn1js";
-import * as ethutil from "ethereumjs-util";
+import * as ethutil from "@ethereumjs/util";
 import { UAddress } from "./UAddress";
 import { UBuffer } from "./UBuffer";
 
@@ -90,7 +90,7 @@ export class UPublickey {
         return new UPublickey(UBuffer.bufferOrHex(input));
     }
 
-    public static fromVRS(msgHash: Buffer, v: number, r: Buffer, s: Buffer, chainId?: number) {
-        return new UPublickey(ethutil.ecrecover(msgHash, v, r, s, chainId));
+    public static fromVRS(digest: Buffer, v: bigint, r: Buffer, s: Buffer, chainId?: bigint) {
+        return new UPublickey(ethutil.ecrecover(digest, v, r, s, chainId));
     }
 }

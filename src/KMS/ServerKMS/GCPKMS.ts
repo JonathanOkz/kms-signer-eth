@@ -37,14 +37,14 @@ export class GCPKMS extends ServerKMS {
      * 
      * @returns a DER-encoded object as defined by ANS X9.62–2005.
      */
-    async kmsSignDigest(KeyId: string, msgHash: Buffer) : Promise<Buffer> { console.log("GCPKMS kmsSignDigest...", this.kms.cryptoKeyVersionPath(this.path.projectId, this.path.locationId, this.path.keyRingId, KeyId, '1'));
+    async kmsSignDigest(KeyId: string, digest: Buffer) : Promise<Buffer> { console.log("GCPKMS kmsSignDigest...", this.kms.cryptoKeyVersionPath(this.path.projectId, this.path.locationId, this.path.keyRingId, KeyId, '1'));
         const [signResponse] = await this.kms.asymmetricSign({
             name: this.kms.cryptoKeyVersionPath(this.path.projectId, this.path.locationId, this.path.keyRingId, KeyId, '1'),
             digest: {
-                sha256: msgHash
+                sha256: digest
             },
             digestCrc32c: {
-                value: crc32c.calculate(msgHash),
+                value: crc32c.calculate(digest),
             }
         });
         if (!signResponse.signature || !signResponse.signatureCrc32c) {
