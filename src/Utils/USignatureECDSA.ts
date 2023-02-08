@@ -1,5 +1,5 @@
 import * as asn1js from "asn1js";
-import { BN } from "bn.js";
+import BN from "bn.js";
 import { UPublickey } from "./UPublickey";
 
 export class USignatureECDSA {
