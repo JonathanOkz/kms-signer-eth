@@ -28,14 +28,6 @@ export class Signer {
     /**
      * @returns The concatenated ECDSA signature as a '0x'-prefixed string.
      */
-    public async signDigestHex(account: Account | { address: Buffer, KeyId: string }, digestHex: string) {
-        const digest = UBuffer.bufferOrHex(digestHex)
-        return this.signDigest(account, digest);
-    }
-
-    /**
-     * @returns The concatenated ECDSA signature as a '0x'-prefixed string.
-     */
     public async signMessage(account: Account | { address: Buffer, KeyId: string }, message: string) {
         const digest = hashPersonalMessage(Buffer.from(message));
         return this.signDigest(account, digest);
@@ -44,8 +36,8 @@ export class Signer {
     /**
      * @returns The concatenated ECDSA signature as a '0x'-prefixed string.
      */
-    public async signDigest(account: Account | { address: Buffer, KeyId: string }, digest: Buffer) {
-        const {r, s, v} = await this.kms.ecsign(account.address, account.KeyId, digest);
+    public async signDigest(account: Account | { address: Buffer, KeyId: string }, digest: string | Buffer) {
+        const {r, s, v} = await this.kms.ecsign(account.address, account.KeyId, UBuffer.bufferOrHex(digest));
 
         const rStr = toUnsigned(fromSigned(r)).toString('hex');
         const sStr = toUnsigned(fromSigned(s)).toString('hex');
